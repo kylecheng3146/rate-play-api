@@ -64,9 +64,13 @@ namespace rate_play_api.Repositories
         /// data list.
         /// </returns>
         ///
-        public IEnumerable<Exrate> GetAllData()
+        public IEnumerable<Object> GetAllData()
         {
-            return _context.Exrate.ToList().OrderByDescending(x => x.Utc);
+            return _context.Exrate.Select(r => new
+            {
+                exrate = r.Exrate1,
+                utc = r.Utc
+            }).ToList().OrderByDescending(r => r.utc);
         }
         #endregion
 
@@ -157,6 +161,23 @@ namespace rate_play_api.Repositories
         /// boolean.
         /// </returns>
         ///
+        public bool TryGetHistoryRate(string rate_name, out Object model)
+        {
+            model = _context.Exrate.Where(m => rate_name.Equals(m.RateName)).ToList().OrderByDescending(r => r.Utc);
+            return (model != null);
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 從匯率名稱判斷Exrate是否有值
+        /// </summary>
+        /// <param name="rate_name">ID.</param>
+        /// <param name="model">Exrate 資料表.</param>
+        /// <returns>
+        /// boolean.
+        /// </returns>
+        ///
         public bool TryGetByExrate(string rate_name, out Object model)
         {
             model = _context.Exrate.Where(m => rate_name.Equals(m.RateName) && m.Utc.Contains("2019-06-07")).SingleOrDefault();
@@ -179,6 +200,11 @@ namespace rate_play_api.Repositories
         {
             model = _context.Exrate.Find(id);
             return (model != null);
+        }
+
+        IEnumerable<Exrate> IBaseRepository<Exrate>.GetAllData()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

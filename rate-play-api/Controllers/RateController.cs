@@ -57,7 +57,7 @@ namespace rate_play_api.Controllers
         /// <remark>
         /// Author:Kevin Cheng (quickey123@gmail.com).
         /// </remark>
-        // GET: api/Exrate/{value}
+        // GET: api/rate/{value}
         [HttpGet("GetByRateName")]
         [Authorize]
         [ProducesResponseType(200)]
@@ -66,6 +66,33 @@ namespace rate_play_api.Controllers
         {
             // return rate_name;
             if (!_RateRepository.TryGetByExrate(rate_name, out var Exrate))
+            {
+                return NotFound();
+            }
+            return Ok(Exrate);
+        }
+        #endregion
+
+        #region 【查詢工單號碼的資料】GetByExrateExrateCode
+        /// <summary>
+        /// 從ID條件下取得資料
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>
+        /// boolean.
+        /// </returns>
+        /// <remark>
+        /// Author:Kevin Cheng (quickey123@gmail.com).
+        /// </remark>
+        // GET: api/rate/{value}
+        [HttpGet("GetHistoryRate")]
+        [Authorize]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult<Exrate> GetHistoryRate(string rate_name)
+        {
+            // return rate_name;
+            if (!_RateRepository.TryGetHistoryRate(rate_name, out var Exrate))
             {
                 return NotFound();
             }
@@ -86,6 +113,26 @@ namespace rate_play_api.Controllers
             }
             await _RateRepository.AddDataAsync(Exrate);
             return CreatedAtAction(nameof(GetById), new { id = Exrate.Id }, Exrate);
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 取得所有資料
+        /// </summary>
+        /// <returns>
+        /// data list.
+        /// </returns>
+        /// <remark>
+        /// Author:Kevin Cheng (quickey123@gmail.com).
+        /// </remark>
+        // GET: api/rate
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IEnumerable<Object> Get()
+        {
+            return _RateRepository.GetAllData();
         }
         #endregion
     }
