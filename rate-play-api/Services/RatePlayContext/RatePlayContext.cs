@@ -26,7 +26,7 @@ namespace rate_play_api.Services.RatePlayContext
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=127.0.0.1;port=3306;user=root;database=RatePlay");
+                optionsBuilder.UseMySQL("server=localhost;port=3306;user=root;database=RatePlay");
             }
         }
 
@@ -111,6 +111,13 @@ namespace rate_play_api.Services.RatePlayContext
                     .IsRequired()
                     .HasColumnName("country_name")
                     .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.CurrencyName)
+                    .IsRequired()
+                    .HasColumnName("currency_name")
+                    .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasDefaultValueSql("''");
             });

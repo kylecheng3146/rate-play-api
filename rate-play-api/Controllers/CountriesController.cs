@@ -12,19 +12,19 @@ using rate_play_api.Services.RatePlayContext;
 namespace rate_play_api.Controllers
 {
     [Route("api/[controller]")]
-    public class ActivityController : ControllerBase
+    public class CountriesController : ControllerBase
     {
-        private readonly ActivityRepository _ActivityRepository;
+        private readonly CountriesRepository _CountriesRepository;
 
-        public ActivityController(ActivityRepository ActivityController)
+        public CountriesController(CountriesRepository CountriesController)
         {
-            _ActivityRepository = ActivityController;
+            _CountriesRepository = CountriesController;
         }
 
         #region 【獲取特定資料】GetById
         /// <summary>
         /// 從ID條件下取得資料
-        /// /api/activity/{value}
+        /// /api/Countries/{value}
         /// </summary>
         /// <param name="id">id.</param>
         /// <returns>
@@ -36,17 +36,17 @@ namespace rate_play_api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult<Activity> GetById(int id)
+        public ActionResult<Countries> GetById(int id)
         {
-            if (!_ActivityRepository.TryGetDataById(id, out var Activity))
+            if (!_CountriesRepository.TryGetDataById(id, out var Countries))
             {
                 return NotFound();
             }
-            return Ok(Activity);
+            return Ok(Countries);
         }
         #endregion
 
-        #region 【查詢工單號碼的資料】GetByActivityActivityCode
+        #region 【查詢工單號碼的資料】GetByCountriesCountriesCode
         /// <summary>
         /// 從ID條件下取得資料
         /// </summary>
@@ -57,19 +57,19 @@ namespace rate_play_api.Controllers
         /// <remark>
         /// Author:Kevin Cheng (quickey123@gmail.com).
         /// </remark>
-        // GET: api/Activity/{value}
-        [HttpGet("GetByActivityCode")]
+        // GET: api/Countries/{value}
+        [HttpGet("GetByCountryCode")]
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult<Activity> GetByActivityCode(string Activity_code)
+        public ActionResult<Countries> GetByCountriesCode(string country_code)
         {
-            // return Activity_code;
-            if (!_ActivityRepository.TryGetByActivitySouper(Activity_code, out var Activity))
+            // return Countries_Code;
+            if (!_CountriesRepository.TryGetByCountry(country_code, out var Countries))
             {
                 return NotFound();
             }
-            return Ok(Activity);
+            return Ok(Countries);
         }
         #endregion
 
@@ -78,17 +78,16 @@ namespace rate_play_api.Controllers
         [Route("AddData")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<Activity>> AddData([FromBody] Activity Activity)
+        public async Task<ActionResult<Countries>> AddData([FromBody] Countries Countries)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await _ActivityRepository.AddDataAsync(Activity);
-            return CreatedAtAction(nameof(GetById), new { id = Activity.Id }, Activity);
+            await _CountriesRepository.AddDataAsync(Countries);
+            return CreatedAtAction(nameof(GetById), new { id = Countries.Id }, Countries);
         }
         #endregion
-
 
         #region
         /// <summary>
@@ -100,12 +99,13 @@ namespace rate_play_api.Controllers
         /// <remark>
         /// Author:Kevin Cheng (quickey123@gmail.com).
         /// </remark>
-        // GET: api/activity
+        // GET: api/countries
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IEnumerable<Object> Get() {
-            return _ActivityRepository.GetAllData();
+        public IEnumerable<Object> Get()
+        {
+            return _CountriesRepository.GetAllData();
         }
         #endregion
     }

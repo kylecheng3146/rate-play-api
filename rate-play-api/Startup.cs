@@ -36,6 +36,8 @@ namespace rate_play_api {
             // services.AddScoped<SampleRepository>();
             services.AddScoped<ActivityRepository>();
             services.AddScoped<LoginRepository>();
+            services.AddScoped<RateRepository>();
+            services.AddScoped<CountriesRepository>();
             // services.AddScoped<WorkRepository>();
             // services.AddScoped<WireRepository>();
             // services.AddScoped<SendJobRepository>();

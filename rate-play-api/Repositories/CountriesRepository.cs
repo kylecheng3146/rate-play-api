@@ -12,10 +12,10 @@ using rate_play_api.Utilities;
 
 namespace rate_play_api.Repositories
 {
-    public class ActivityRepository : IBaseRepository<Activity>
+    public class CountriesRepository : IBaseRepository<Countries>
     {
         private readonly RatePlayContext _context;
-        public ActivityRepository(RatePlayContext context)
+        public CountriesRepository(RatePlayContext context)
         {
             _context = context;
         }
@@ -24,15 +24,15 @@ namespace rate_play_api.Repositories
         /// <summary>
         /// 新增一筆資料.
         /// </summary>
-        /// <param name="model">Activity資料表.</param>
+        /// <param name="model">Countries資料表.</param>
         /// <returns>
         /// rowsAffected.
         /// </returns>
         ///
-        public async Task<int> AddDataAsync(Activity model)
+        public async Task<int> AddDataAsync(Countries model)
         {
             int rowsAffected = 0;
-            _context.Activity.Add(model);
+            _context.Countries.Add(model);
             rowsAffected = await _context.SaveChangesAsync();
             return rowsAffected;
         }
@@ -42,15 +42,15 @@ namespace rate_play_api.Repositories
         /// <summary>
         /// 刪除特定一筆資料.
         /// </summary>
-        /// <param name="Activity">Activity資料表.</param>
+        /// <param name="Countries">Countries資料表.</param>
         /// <returns>
         /// rowsAffected.
         /// </returns>
         ///
-        public async Task<int> DeleteDataAsync(Activity Activity)
+        public async Task<int> DeleteDataAsync(Countries Countries)
         {
             int rowsAffected = 0;
-            _context.Activity.Remove(Activity);
+            _context.Countries.Remove(Countries);
             rowsAffected = await _context.SaveChangesAsync();
             return rowsAffected;
         }
@@ -58,7 +58,7 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 搜尋全部Activity資料
+        /// 搜尋全部Countries資料
         /// </summary>
         /// <returns>
         /// data list.
@@ -66,13 +66,11 @@ namespace rate_play_api.Repositories
         ///
         public IEnumerable<Object> GetAllData()
         {
-            return _context.Activity .Select(r => new {
-                月份 = r.ActMonth,
-                活動名稱 = r.ActName,
-                城市 = r.ActCity,
-                活動連結 = r.ActLink,
-                來源 = r.ActSou,
-                推薦人 = r.ActSouper
+            return _context.Countries.Select(r => new
+            {
+                name = r.CountryName,
+                code = r.CountryCode,
+                currency = r.CurrencyName
             }).ToList();
         }
         #endregion
@@ -84,7 +82,7 @@ namespace rate_play_api.Repositories
         /// <returns>The data async.</returns>
         /// <param name="oldData">Old data.</param>
         /// <param name="newData">New data.</param>
-        public async Task<int> UpdateDataAsync(Activity oldData, Activity newData)
+        public async Task<int> UpdateDataAsync(Countries oldData, Countries newData)
         {
             int rowsAffected = 0;
             // if (Util.checkString(newData.Time.ToString())) {
@@ -115,24 +113,24 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 搜尋最後Activity資料
+        /// 搜尋最後Countries資料
         /// </summary>
         /// <returns>
         /// data list.
         /// </returns>
         ///
-        public Activity GetLastData()
+        public Countries GetLastData()
         {
-            // long maxId = _context.Activity.Max(x => x.No);
-            // var q = _context.Activity.Where(x => x.No == maxId).First();
-            var q = new Activity();
+            // long maxId = _context.Countries.Max(x => x.No);
+            // var q = _context.Countries.Where(x => x.No == maxId).First();
+            var q = new Countries();
             return q;
         }
         #endregion
 
         #region
         /// <summary>
-        /// 搜尋七天Activity資料
+        /// 搜尋七天Countries資料
         /// </summary>
         /// <returns>
         /// data list.
@@ -142,7 +140,7 @@ namespace rate_play_api.Repositories
         {
             var dateCriteria = DateTime.Now.Date.AddDays(-6); //建立日期範圍，今天～今天-6天
             var group = new object();
-            // var group = (from a in _context.Activity where a.UpdTime >= dateCriteria && a.UpdTime < DateTime.Now.Date.AddDays(+1) select a)
+            // var group = (from a in _context.Countries where a.UpdTime >= dateCriteria && a.UpdTime < DateTime.Now.Date.AddDays(+1) select a)
             //     .GroupBy(x => x.UpdTime.Date) //x.Time.Date意思為把date time日期後面都變為0, ex:2019-03-12 12:34:567 -> 2019-03-12 00:00:00.000
             //     .Select(g => new {
             //         Date = g.Key.ToString("yyyy-MM-dd"), //將date time格式化成"yyyy-MM-dd".
@@ -156,39 +154,38 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 從ID判斷Activity是否有值
+        /// 從ID判斷Countries是否有值
         /// </summary>
-        /// <param name="act_souper">ID.</param>
-        /// <param name="model">Activity 資料表.</param>
+        /// <param name="country_code">國家代號.</param>
+        /// <param name="model">Countries 資料表.</param>
         /// <returns>
         /// boolean.
         /// </returns>
         ///
-        public bool TryGetByActivitySouper(string act_souper, out Object model)
+        public bool TryGetByCountry(string country_code, out Object model)
         {
-            model = _context.Activity.Where(m => act_souper.Equals(m.ActSouper)).ToList();
-
+            model = _context.Countries.Where(m => country_code.Equals(m.CountryCode)).SingleOrDefault();
             return (model != null);
         }
         #endregion
 
         #region
         /// <summary>
-        /// 從ID判斷Activity是否有值
+        /// 從ID判斷Countries是否有值
         /// </summary>
         /// <param name="id">id.</param>
-        /// <param name="model">Activity 資料表.</param>
+        /// <param name="model">Countries 資料表.</param>
         /// <returns>
         /// boolean.
         /// </returns>
         ///
-        public bool TryGetDataById(int id, out Activity model)
+        public bool TryGetDataById(int id, out Countries model)
         {
-            model = _context.Activity.Find(id);
+            model = _context.Countries.Find(id);
             return (model != null);
         }
 
-        IEnumerable<Activity> IBaseRepository<Activity>.GetAllData()
+        IEnumerable<Countries> IBaseRepository<Countries>.GetAllData()
         {
             throw new NotImplementedException();
         }

@@ -12,10 +12,10 @@ using rate_play_api.Utilities;
 
 namespace rate_play_api.Repositories
 {
-    public class ActivityRepository : IBaseRepository<Activity>
+    public class RateRepository : IBaseRepository<Exrate>
     {
         private readonly RatePlayContext _context;
-        public ActivityRepository(RatePlayContext context)
+        public RateRepository(RatePlayContext context)
         {
             _context = context;
         }
@@ -24,15 +24,15 @@ namespace rate_play_api.Repositories
         /// <summary>
         /// 新增一筆資料.
         /// </summary>
-        /// <param name="model">Activity資料表.</param>
+        /// <param name="model">Rate資料表.</param>
         /// <returns>
         /// rowsAffected.
         /// </returns>
         ///
-        public async Task<int> AddDataAsync(Activity model)
+        public async Task<int> AddDataAsync(Exrate model)
         {
             int rowsAffected = 0;
-            _context.Activity.Add(model);
+            _context.Exrate.Add(model);
             rowsAffected = await _context.SaveChangesAsync();
             return rowsAffected;
         }
@@ -42,15 +42,15 @@ namespace rate_play_api.Repositories
         /// <summary>
         /// 刪除特定一筆資料.
         /// </summary>
-        /// <param name="Activity">Activity資料表.</param>
+        /// <param name="Exrate">Exrate資料表.</param>
         /// <returns>
         /// rowsAffected.
         /// </returns>
         ///
-        public async Task<int> DeleteDataAsync(Activity Activity)
+        public async Task<int> DeleteDataAsync(Exrate Exrate)
         {
             int rowsAffected = 0;
-            _context.Activity.Remove(Activity);
+            _context.Exrate.Remove(Exrate);
             rowsAffected = await _context.SaveChangesAsync();
             return rowsAffected;
         }
@@ -58,22 +58,15 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 搜尋全部Activity資料
+        /// 搜尋全部Exrate資料
         /// </summary>
         /// <returns>
         /// data list.
         /// </returns>
         ///
-        public IEnumerable<Object> GetAllData()
+        public IEnumerable<Exrate> GetAllData()
         {
-            return _context.Activity .Select(r => new {
-                月份 = r.ActMonth,
-                活動名稱 = r.ActName,
-                城市 = r.ActCity,
-                活動連結 = r.ActLink,
-                來源 = r.ActSou,
-                推薦人 = r.ActSouper
-            }).ToList();
+            return _context.Exrate.ToList().OrderByDescending(x => x.Utc);
         }
         #endregion
 
@@ -84,7 +77,7 @@ namespace rate_play_api.Repositories
         /// <returns>The data async.</returns>
         /// <param name="oldData">Old data.</param>
         /// <param name="newData">New data.</param>
-        public async Task<int> UpdateDataAsync(Activity oldData, Activity newData)
+        public async Task<int> UpdateDataAsync(Exrate oldData, Exrate newData)
         {
             int rowsAffected = 0;
             // if (Util.checkString(newData.Time.ToString())) {
@@ -96,8 +89,8 @@ namespace rate_play_api.Repositories
             // if (newData.Flow > 0) {
             //     oldData.Flow = newData.Flow;
             // }
-            // if (newData.FlowRate > 0) {
-            //     oldData.FlowRate = newData.FlowRate;
+            // if (newData.FlowExrate > 0) {
+            //     oldData.FlowExrate = newData.FlowExrate;
             // }
             // if (newData.Percentage > 0) {
             //     oldData.Percentage = newData.Percentage;
@@ -115,24 +108,24 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 搜尋最後Activity資料
+        /// 搜尋最後Exrate資料
         /// </summary>
         /// <returns>
         /// data list.
         /// </returns>
         ///
-        public Activity GetLastData()
+        public Exrate GetLastData()
         {
-            // long maxId = _context.Activity.Max(x => x.No);
-            // var q = _context.Activity.Where(x => x.No == maxId).First();
-            var q = new Activity();
+            // long maxId = _context.Exrate.Max(x => x.No);
+            // var q = _context.Exrate.Where(x => x.No == maxId).First();
+            var q = new Exrate();
             return q;
         }
         #endregion
 
         #region
         /// <summary>
-        /// 搜尋七天Activity資料
+        /// 搜尋七天Rate資料
         /// </summary>
         /// <returns>
         /// data list.
@@ -142,7 +135,7 @@ namespace rate_play_api.Repositories
         {
             var dateCriteria = DateTime.Now.Date.AddDays(-6); //建立日期範圍，今天～今天-6天
             var group = new object();
-            // var group = (from a in _context.Activity where a.UpdTime >= dateCriteria && a.UpdTime < DateTime.Now.Date.AddDays(+1) select a)
+            // var group = (from a in _context.Rate where a.UpdTime >= dateCriteria && a.UpdTime < DateTime.Now.Date.AddDays(+1) select a)
             //     .GroupBy(x => x.UpdTime.Date) //x.Time.Date意思為把date time日期後面都變為0, ex:2019-03-12 12:34:567 -> 2019-03-12 00:00:00.000
             //     .Select(g => new {
             //         Date = g.Key.ToString("yyyy-MM-dd"), //將date time格式化成"yyyy-MM-dd".
@@ -156,17 +149,17 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 從ID判斷Activity是否有值
+        /// 從匯率名稱判斷Exrate是否有值
         /// </summary>
-        /// <param name="act_souper">ID.</param>
-        /// <param name="model">Activity 資料表.</param>
+        /// <param name="rate_name">ID.</param>
+        /// <param name="model">Exrate 資料表.</param>
         /// <returns>
         /// boolean.
         /// </returns>
         ///
-        public bool TryGetByActivitySouper(string act_souper, out Object model)
+        public bool TryGetByExrate(string rate_name, out Object model)
         {
-            model = _context.Activity.Where(m => act_souper.Equals(m.ActSouper)).ToList();
+            model = _context.Exrate.Where(m => rate_name.Equals(m.RateName) && m.Utc.Contains("2019-06-07")).SingleOrDefault();
 
             return (model != null);
         }
@@ -174,23 +167,18 @@ namespace rate_play_api.Repositories
 
         #region
         /// <summary>
-        /// 從ID判斷Activity是否有值
+        /// 從ID判斷Rate是否有值
         /// </summary>
         /// <param name="id">id.</param>
-        /// <param name="model">Activity 資料表.</param>
+        /// <param name="model">Rate 資料表.</param>
         /// <returns>
         /// boolean.
         /// </returns>
         ///
-        public bool TryGetDataById(int id, out Activity model)
+        public bool TryGetDataById(int id, out Exrate model)
         {
-            model = _context.Activity.Find(id);
+            model = _context.Exrate.Find(id);
             return (model != null);
-        }
-
-        IEnumerable<Activity> IBaseRepository<Activity>.GetAllData()
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }

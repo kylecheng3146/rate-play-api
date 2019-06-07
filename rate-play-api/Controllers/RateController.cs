@@ -12,19 +12,19 @@ using rate_play_api.Services.RatePlayContext;
 namespace rate_play_api.Controllers
 {
     [Route("api/[controller]")]
-    public class ActivityController : ControllerBase
+    public class RateController : ControllerBase
     {
-        private readonly ActivityRepository _ActivityRepository;
+        private readonly RateRepository _RateRepository;
 
-        public ActivityController(ActivityRepository ActivityController)
+        public RateController(RateRepository RateController)
         {
-            _ActivityRepository = ActivityController;
+            _RateRepository = RateController;
         }
 
         #region 【獲取特定資料】GetById
         /// <summary>
         /// 從ID條件下取得資料
-        /// /api/activity/{value}
+        /// /api/Exrate/{value}
         /// </summary>
         /// <param name="id">id.</param>
         /// <returns>
@@ -36,17 +36,17 @@ namespace rate_play_api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult<Activity> GetById(int id)
+        public ActionResult<Exrate> GetById(int id)
         {
-            if (!_ActivityRepository.TryGetDataById(id, out var Activity))
+            if (!_RateRepository.TryGetDataById(id, out var Exrate))
             {
                 return NotFound();
             }
-            return Ok(Activity);
+            return Ok(Exrate);
         }
         #endregion
 
-        #region 【查詢工單號碼的資料】GetByActivityActivityCode
+        #region 【查詢工單號碼的資料】GetByExrateExrateCode
         /// <summary>
         /// 從ID條件下取得資料
         /// </summary>
@@ -57,19 +57,19 @@ namespace rate_play_api.Controllers
         /// <remark>
         /// Author:Kevin Cheng (quickey123@gmail.com).
         /// </remark>
-        // GET: api/Activity/{value}
-        [HttpGet("GetByActivityCode")]
+        // GET: api/Exrate/{value}
+        [HttpGet("GetByRateName")]
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult<Activity> GetByActivityCode(string Activity_code)
+        public ActionResult<Exrate> GetByRateName(string rate_name)
         {
-            // return Activity_code;
-            if (!_ActivityRepository.TryGetByActivitySouper(Activity_code, out var Activity))
+            // return rate_name;
+            if (!_RateRepository.TryGetByExrate(rate_name, out var Exrate))
             {
                 return NotFound();
             }
-            return Ok(Activity);
+            return Ok(Exrate);
         }
         #endregion
 
@@ -78,34 +78,14 @@ namespace rate_play_api.Controllers
         [Route("AddData")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<Activity>> AddData([FromBody] Activity Activity)
+        public async Task<ActionResult<Exrate>> AddData([FromBody] Exrate Exrate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await _ActivityRepository.AddDataAsync(Activity);
-            return CreatedAtAction(nameof(GetById), new { id = Activity.Id }, Activity);
-        }
-        #endregion
-
-
-        #region
-        /// <summary>
-        /// 取得所有資料
-        /// </summary>
-        /// <returns>
-        /// data list.
-        /// </returns>
-        /// <remark>
-        /// Author:Kevin Cheng (quickey123@gmail.com).
-        /// </remark>
-        // GET: api/activity
-        [HttpGet]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IEnumerable<Object> Get() {
-            return _ActivityRepository.GetAllData();
+            await _RateRepository.AddDataAsync(Exrate);
+            return CreatedAtAction(nameof(GetById), new { id = Exrate.Id }, Exrate);
         }
         #endregion
     }
