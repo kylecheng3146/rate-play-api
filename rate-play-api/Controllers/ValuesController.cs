@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ofco_projects_api.Controllers
+namespace rate_play_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

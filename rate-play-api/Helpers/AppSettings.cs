@@ -1,4 +1,4 @@
-namespace ofco_projects_api.Helpers
+namespace rate_play_api.Helpers
 {
     public class AppSettings
     {

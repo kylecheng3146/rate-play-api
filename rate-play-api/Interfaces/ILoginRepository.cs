@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using ofco_projects_api.Services.OfcoContext;
+using System.Threading.Tasks;
+using rate_play_api.Services;
+using rate_play_api.Services.RatePlayContext;
 
-namespace ofco_projects_api.Interfaces
+namespace rate_play_api.Interfaces
 {
     public interface ILoginRepository
     {
-        Users Authenticate(string username, string password);
+        Member AuthenticateAsync(string username, string password);
     }
 }

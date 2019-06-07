@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using NLog;
-using ofco_projects_api.DataModel;
+using rate_play_api.DataModel;
 
 namespace SmartEquipment.Extensions
 {

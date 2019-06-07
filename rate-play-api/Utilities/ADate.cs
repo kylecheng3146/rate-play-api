@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ofco_projects_api.Utilities
+namespace rate_play_api.Utilities
 {
     public class ADate
     {

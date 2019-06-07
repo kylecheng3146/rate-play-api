@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ofco_projects_api.Services.OfcoContext;
+using rate_play_api.Services.OfcoContext;
 
-namespace ofco_projects_api.Interfaces
+namespace rate_play_api.Interfaces
 {
     public interface ISampleRepository<T> : IBaseRepository<T>
     {

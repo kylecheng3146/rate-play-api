@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ofco_projects_api.Model {
+namespace rate_play_api.Model {
     /// <summary>
     /// 呼叫外部 API 要顯示的模型資料
     /// </summary>

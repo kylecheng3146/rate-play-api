@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ofco_projects_api.DataModel {
+namespace rate_play_api.DataModel {
     public class RangeDataModel {
         public RangeDataModel () { }
 

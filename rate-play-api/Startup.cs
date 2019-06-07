@@ -17,14 +17,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using ofco_projects_api.Helpers;
-using ofco_projects_api.Interfaces;
-using ofco_projects_api.Repositories;
-using ofco_projects_api.Services.OfcoContext;
+using rate_play_api.Helpers;
+using rate_play_api.Interfaces;
+using rate_play_api.Repositories;
+using rate_play_api.Services.RatePlayContext;
 using Swashbuckle.AspNetCore.Swagger;
 
-
-namespace ofco_projects_api {
+namespace rate_play_api {
     public class Startup {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
@@ -34,10 +33,15 @@ namespace ofco_projects_api {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<SampleRepository>();
+            // services.AddScoped<SampleRepository>();
+            services.AddScoped<ActivityRepository>();
             services.AddScoped<LoginRepository>();
-            services.AddDbContext<OfcoContext> (opt =>
-            opt.UseSqlServer (Configuration.GetConnectionString ("Ofco")));
+            // services.AddScoped<WorkRepository>();
+            // services.AddScoped<WireRepository>();
+            // services.AddScoped<SendJobRepository>();
+            services.AddScoped<MachineRepository>();
+            services.AddDbContext<RatePlayContext>(opt =>
+                opt.UseMySql(Configuration.GetConnectionString("NCKU")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //修正返回時間格式含有T，配置序列化時時間格式為yyyy-MM-dd HH:mm:ss.fff.
             services.AddMvc().AddJsonOptions(option => {
@@ -62,7 +66,6 @@ namespace ofco_projects_api {
                 });
             });
 
-
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -70,23 +73,20 @@ namespace ofco_projects_api {
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            services.AddAuthentication(x => {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x => {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
             // configure DI for application services
             services.AddScoped<ILoginRepository, LoginRepository>();
         }

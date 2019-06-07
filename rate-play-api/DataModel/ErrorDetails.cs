@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace ofco_projects_api.DataModel {
+namespace rate_play_api.DataModel {
     public class ErrorDetails {
         public int StatusCode { get; set; }
         public string Message { get; set; }

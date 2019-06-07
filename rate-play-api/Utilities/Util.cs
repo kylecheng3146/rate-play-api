@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ofco_projects_api.Utilities
+namespace rate_play_api.Utilities
 {
     public class Util
     {

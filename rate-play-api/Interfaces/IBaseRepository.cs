@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ofco_projects_api.Interfaces
+namespace rate_play_api.Interfaces
 {
     /// <summary>
     /// Base repository, 基本的資料庫操作方法CRUD。
@@ -13,6 +13,6 @@ namespace ofco_projects_api.Interfaces
         Task<int> AddDataAsync(T model);
         Task<int> UpdateDataAsync(T oldData, T newData);
         Task<int> DeleteDataAsync(T waterMeter);
-        bool TryGetDataById(long id, out T model);
+        bool TryGetDataById(int id, out T model);
     }
 }

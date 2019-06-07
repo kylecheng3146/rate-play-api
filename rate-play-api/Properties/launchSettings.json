@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ofco_projects_api": {
+    "rate_play_api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

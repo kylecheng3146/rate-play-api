@@ -1,4 +1,4 @@
-namespace ofco_projects_api.DataModel
+namespace rate_play_api.DataModel
 {
     public class User
     {

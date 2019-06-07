@@ -1,10 +1,10 @@
 ﻿using System;
 using RestSharp;
-using ofco_projects_api.Model;
+using rate_play_api.Model;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace ofco_projects_api.Utilities
+namespace rate_play_api.Utilities
 {
     /// <summary>
     /// HttpClient json param use RestSharp include get, post, delete, put method.
